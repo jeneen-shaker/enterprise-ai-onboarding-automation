@@ -1,0 +1,255 @@
+{
+  "name": "Onboarding",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "13-o_6yoVnvAgWx-aNj6ExRJrHQtt-YMRCs0l1Jz9kXg",
+          "mode": "list",
+          "cachedResultName": "Onboarding (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13-o_6yoVnvAgWx-aNj6ExRJrHQtt-YMRCs0l1Jz9kXg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 502148391,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13-o_6yoVnvAgWx-aNj6ExRJrHQtt-YMRCs0l1Jz9kXg/edit#gid=502148391"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a1ea1fc4-8b8e-4c24-b8de-d69ea6f1fde1",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "0kze7WLO507KmbX9",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=\"You are an expert HR Operations Assistant specialized in enterprise onboarding. Your goal is to create structured, professional, and welcoming onboarding plans based on the employee's department and job title. Always return the output in a clear, bulleted format.\""
+            },
+            {
+              "content": "=\"Create a 3-day onboarding plan for {{ $json['Full Name'] }} who is joining the {{ $json['Department'] }} team as a {{ $json['Job title'] }}.\""
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "94e28207-a5c7-4a0b-aec1-3d9e3ffc4f0a",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "VhrTTZueQAIgel15",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appMcLlLXENYonOk3",
+          "mode": "list",
+          "cachedResultName": "Onboarding",
+          "cachedResultUrl": "https://airtable.com/appMcLlLXENYonOk3"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl8Nu6MXYZf1vjsP",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appMcLlLXENYonOk3/tbl8Nu6MXYZf1vjsP"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "AI_Onboarding_Plan": "={{ $json.output[0].content[0].text }}",
+            "Email": "={{ $('Google Sheets Trigger').item.json.Email }}",
+            "Name": "={{ $('Google Sheets Trigger').item.json['Full Name'] }}",
+            "Department": "={{ $('Google Sheets Trigger').item.json.Department }}",
+            "Status": "Started"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Engineering",
+                  "value": "Engineering"
+                },
+                {
+                  "name": "Sales & Marketing",
+                  "value": "Sales & Marketing"
+                },
+                {
+                  "name": "Operations & HR",
+                  "value": "Operations & HR"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI_Onboarding_Plan",
+              "displayName": "AI_Onboarding_Plan",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Started",
+                  "value": "Started"
+                },
+                {
+                  "name": "In Progress",
+                  "value": "In Progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        544,
+        0
+      ],
+      "id": "ea47890f-0a3f-4a9d-998c-8f191134d7e4",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "UwjXVvnuRgEDRgcQ",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "30529d91-13eb-490f-a623-e1bd95645403",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6f4c1fa695542c732ce198c9989710acb17eaf0012b7459e9f2d197b5e1a4465"
+  },
+  "id": "EpQVuVqV4mqM97i3",
+  "tags": []
+}
